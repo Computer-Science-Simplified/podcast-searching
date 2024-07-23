@@ -7,6 +7,7 @@ use App\Jobs\SummarizeEpisodeJob;
 use App\Jobs\TranscriptEpisodeJob;
 use App\Models\Episode;
 use App\Models\Podcast;
+use App\Services\OpenAiService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 
@@ -33,5 +34,10 @@ class PodcastEpisodeController extends Controller
             ->dispatch();
 
         return $episode;
+    }
+
+    public function question(Request $request, Podcast $podcast, Episode $episode, OpenAiService $openAi)
+    {
+        return $openAi->answer($request->question, $episode->content);
     }
 }

@@ -19,7 +19,7 @@ class TranscriptEpisodeJob implements ShouldQueue
 
     public function handle(OpenAiService $openAi): void
     {
-        $this->episode->content = $openAi->transcript($this->episode);
+        $this->episode->content = $openAi->transcript($this->episode->audio_file_path);
 
         $this->episode->save();
     }

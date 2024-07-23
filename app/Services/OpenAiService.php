@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Episode;
 use OpenAI;
 use OpenAI\Client;
 
@@ -15,11 +14,11 @@ class OpenAiService
         $this->client = OpenAI::client($this->apiKey);
     }
 
-    public function transcript(Episode $episode): string
+    public function transcript(string $filePath): string
     {
         $response = $this->client->audio()->transcribe([
             'model' => 'whisper-1',
-            'file' => fopen($episode->audio_file_path, 'r'),
+            'file' => fopen($filePath, 'r'),
         ]);
 
         return $response->text;
@@ -28,7 +27,7 @@ class OpenAiService
     public function summarize(string $text): ?string
     {
         $response = $this->client->chat()->create([
-            'model' => 'gpt-3.5-turbo',
+            'model' => 'gpt-4o',
             'messages' => [
                 ['role' => 'user', 'content' => 'Summarize the following text in 5-8 sentences. Text: "' . $text . '"'],
             ],

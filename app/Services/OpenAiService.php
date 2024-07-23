@@ -40,4 +40,14 @@ class OpenAiService
 
         return $response->choices[0]->message->content;
     }
+
+    public function createEmbeddings(string $text): array
+    {
+        $response = $this->client->embeddings()->create([
+            'model' => 'text-embedding-ada-002',
+            'input' => $text,
+        ]);
+
+        return $response->embeddings[0]->embedding;
+    }
 }

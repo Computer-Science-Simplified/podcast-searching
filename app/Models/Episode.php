@@ -10,4 +10,8 @@ class Episode extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $casts = [
+        'embeddings' => 'array',
+    ];
 }

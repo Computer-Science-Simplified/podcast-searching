@@ -53,15 +53,12 @@ class OpenAiService
     }
 
     /**
-     * @param string $question
      * @param Collection<HasEmbeddings> $models
      * @return Collection<int|string> IDs of best matches
      */
-    public function getBestMatches(string $question, Collection $models, int $numberOfMatches = 3): Collection
+    public function getBestMatches(array $embeddings, Collection $models, int $numberOfMatches = 3): Collection
     {
-        $questionEmbedding = $this->createEmbeddings($question);
-
-        $distances = $this->getDistances($models, $questionEmbedding);
+        $distances = $this->getDistances($models, $embeddings);
 
         return collect($distances)
             ->sortByDesc('distance')

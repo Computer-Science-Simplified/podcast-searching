@@ -17,6 +17,7 @@ class EpisodeFactory extends Factory
             'title' => $this->faker->words(5, true),
             'summary' => $this->faker->realText(rand(100, 500)),
             'content' => $this->faker->realText(rand(10000, 40000)),
+            'audio_file_path' => storage_path('app/sample.mp3'),
         ];
     }
 }

@@ -13,9 +13,12 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Podcast::class)->constrained();
             $table->string('title');
-            $table->text('summary');
-            $table->mediumText('content');
+            $table->text('summary')->nullable();
+            $table->mediumText('content')->nullable();
+            $table->string('audio_file_path');
             $table->timestamps();
+
+            $table->fullText(['title', 'summary', 'content']);
         });
     }
 

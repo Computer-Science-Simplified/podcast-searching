@@ -21,8 +21,6 @@ class SummarizeEpisodeJob implements ShouldQueue
     {
         $this->episode->summary = $openAi->summarize($this->episode->content);
 
-        $this->episode->embeddings = $openAi->createEmbeddings($this->episode->content);
-
         $this->episode->save();
     }
 }

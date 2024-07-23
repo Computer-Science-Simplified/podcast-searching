@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Jobs\CreateEmbeddingsForEpisodeJob;
 use App\Jobs\SummarizeEpisodeJob;
-use App\Jobs\TranscriptEpisodeJob;
+use App\Jobs\TranscribeEpisodeJob;
 use App\Models\Episode;
 use App\Models\Podcast;
 use Illuminate\Http\Request;
@@ -23,7 +23,7 @@ class PodcastEpisodeController extends Controller
 
         Bus::batch([
             [
-                new TranscriptEpisodeJob($episode),
+                new TranscribeEpisodeJob($episode),
             ],
             [
                 new SummarizeEpisodeJob($episode->refresh()),

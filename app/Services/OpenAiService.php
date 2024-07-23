@@ -16,7 +16,7 @@ class OpenAiService
         $this->client = OpenAI::client($this->apiKey);
     }
 
-    public function transcript(string $filePath): string
+    public function transcribe(string $filePath): ?string
     {
         $response = $this->client->audio()->transcribe([
             'model' => 'whisper-1',

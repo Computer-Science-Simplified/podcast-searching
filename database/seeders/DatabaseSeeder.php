@@ -12,6 +12,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        Episode::factory(20)->create();
+        Episode::factory(100)->create();
     }
 }

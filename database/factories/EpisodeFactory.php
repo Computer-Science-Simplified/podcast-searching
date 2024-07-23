@@ -16,7 +16,7 @@ class EpisodeFactory extends Factory
             'podcast_id' => Podcast::factory(),
             'title' => $this->faker->words(5, true),
             'summary' => $this->faker->realText(rand(100, 500)),
-            'content' => $this->faker->realText(rand(10000, 40000)),
+            'content' => $this->faker->realText(50_000),
             'audio_file_path' => storage_path('app/sample.mp3'),
         ];
     }

@@ -2,25 +2,62 @@
 
 namespace App\Services;
 
+use App\Models\HasEmbeddings;
+use Illuminate\Support\Collection;
+
 class SimilarityService
 {
-    public static function cosine(array $a, array $b): float
+    /**
+     * @param Collection<HasEmbeddings> $models
+     * @return Collection<int|string> IDs of best matches
+     */
+    public function getMostSimilarModels(array $embeddings, Collection $models, int $numberOfMatches = 3): Collection
     {
-        $dotProduct = self::dotProduct($a, $b);
-
-        $sqrt = sqrt(self::dotProduct($a, $a) * self::dotProduct($b, $b));
-
-        return $dotProduct / $sqrt;
+        return $this->getSimilarities($models, $embeddings)
+            ->sortByDesc('similarity')
+            ->take($numberOfMatches)
+            ->pluck('model_id');
     }
 
-    private static function dotProduct(array $a, array $b): float
+    /**
+     * @param Collection<HasEmbeddings> $models
+     * @return Collection<array<string, mixed>>
+     */
+    private function getSimilarities(Collection $models, array $inputEmbedding): Collection
     {
-        $products = array_map(function ($a, $b) {
-            return $a * $b;
-        }, $a, $b);
+        $similarities = [];
 
-        return array_reduce($products, function ($a, $b) {
-            return $a + $b;
-        });
+        foreach ($models as $model) {
+            /** @var HasEmbeddings $model */
+            $similarities[] = [
+                'model_id' => $model->getId(),
+                'similarity' => $this->cosineSimilarity($inputEmbedding, $model->getEmbeddings()),
+            ];
+        }
+
+        return collect($similarities);
+    }
+
+    public function cosineSimilarity(array $a, array $b): float
+    {
+        $dotProduct = $this->dotProduct($a, $b);
+
+        $magnitudeA = $this->magnitude($a);
+
+        $magnitudeB = $this->magnitude($b);
+
+        return $dotProduct / ($magnitudeA * $magnitudeB);
+    }
+
+    private function dotProduct(array $a, array $b): float
+    {
+        $products = array_map(fn ($ax, $bx) => $ax * $bx, $a, $b);
+
+        return array_sum($products);
+    }
+
+    private function magnitude(array $a): float
+    {
+        return sqrt(array_sum(array_map(fn ($x) => $x * $x, $a)));
     }
 }

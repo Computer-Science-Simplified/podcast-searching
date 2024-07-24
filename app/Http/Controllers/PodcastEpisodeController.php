@@ -17,7 +17,7 @@ class PodcastEpisodeController extends Controller
         /** @var Episode $episode */
         $episode = Episode::create([
             'podcast_id' => $podcast->id,
-            'audio_file_path' => storage_path('app/sample.mp3'),
+            'audio_file_path' => storage_path('app/hackers_01.mp3'),
             'title' => $request->title,
         ]);
 

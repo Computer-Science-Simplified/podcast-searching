@@ -11,8 +11,9 @@ class OpenAiService
 {
     private Client $client;
 
-    public function __construct(private string $apiKey)
-    {
+    public function __construct(
+        private string $apiKey,
+    ) {
         $this->client = OpenAI::client($this->apiKey);
     }
 
@@ -50,38 +51,6 @@ class OpenAiService
         ]);
 
         return $response->embeddings[0]->embedding;
-    }
-
-    /**
-     * @param Collection<HasEmbeddings> $models
-     * @return Collection<int|string> IDs of best matches
-     */
-    public function getBestMatches(array $embeddings, Collection $models, int $numberOfMatches = 3): Collection
-    {
-        $distances = $this->getDistances($models, $embeddings);
-
-        return collect($distances)
-            ->sortByDesc('distance')
-            ->take($numberOfMatches)
-            ->pluck('entity_id');
-    }
-
-    /**
-     * @param Collection<HasEmbeddings> $models
-     */
-    private function getDistances(Collection $models, array $inputEmbedding): array
-    {
-        $distances = [];
-
-        foreach ($models as $model) {
-            /** @var HasEmbeddings $model */
-            $distances[] = [
-                'entity_id' => $model->getId(),
-                'distance' => SimilarityService::cosine($inputEmbedding, $model->getEmbeddings()),
-            ];
-        }
-
-        return $distances;
     }
 
     public function answer(string $question, string $context): ?string

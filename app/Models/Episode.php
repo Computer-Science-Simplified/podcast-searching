@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Episode extends Model implements HasEmbeddings
 {
@@ -14,6 +15,11 @@ class Episode extends Model implements HasEmbeddings
     protected $casts = [
         'embeddings' => 'array',
     ];
+
+    public function podcast(): BelongsTo
+    {
+        return $this->belongsTo(Podcast::class);
+    }
 
     public function getEmbeddings(): array
     {

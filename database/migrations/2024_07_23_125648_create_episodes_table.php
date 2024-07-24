@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('summary')->nullable();
             $table->mediumText('content')->nullable();
-            $table->string('audio_file_path');
+            $table->string('audio_file_path')->nullable();
             $table->json('embeddings')->nullable();
             $table->timestamps();
 

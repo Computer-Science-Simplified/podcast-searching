@@ -22,7 +22,7 @@ class ChunkEpisodeJob implements ShouldQueue
     {
         $fileService->chunk(
             $this->episode->audio_file_path,
-            Str::beforeLast($this->episode->audio_file_path, DIRECTORY_SEPARATOR),
+            $this->episode->chunk_folder_path,
         );
     }
 }

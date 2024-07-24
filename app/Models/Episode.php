@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 class Episode extends Model implements HasEmbeddings
 {
@@ -29,5 +31,12 @@ class Episode extends Model implements HasEmbeddings
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function chunkFolderPath(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Str::beforeLast($this->audio_file_path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'chunks',
+        );
     }
 }

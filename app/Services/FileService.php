@@ -20,7 +20,7 @@ class FileService
             $chunkData = fread($file, $chunkSize);
 
             if ($chunkData) {
-                $chunkFileName = $destinationFolder . DIRECTORY_SEPARATOR . "chunk_{$chunkNumber}.mp3";
+                $chunkFileName = $destinationFolder . DIRECTORY_SEPARATOR . "{$chunkNumber}.mp3";
 
                 file_put_contents($chunkFileName, $chunkData);
 

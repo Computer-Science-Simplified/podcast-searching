@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ChunkEpisodeJob;
-use App\Jobs\CreateEmbeddingsForEpisodeJob;
-use App\Jobs\SummarizeEpisodeJob;
 use App\Jobs\TranscribeEpisodeJob;
-use App\Jobs\UploadEpisodeFileJob;
 use App\Models\Episode;
 use App\Models\Podcast;
 use Illuminate\Http\Request;
@@ -31,23 +28,11 @@ class PodcastEpisodeController extends Controller
 
         $episode->save();
 
-        Bus::batch([
-            [
-                new ChunkEpisodeJob($episode->refresh()),
-            ],
+        Bus::chain([
+            new ChunkEpisodeJob($episode->refresh()),
+            new TranscribeEpisodeJob($episode),
         ])
             ->dispatch();
-
-//        Bus::batch([
-//            [
-//                new TranscribeEpisodeJob($episode),
-//            ],
-//            [
-//                new SummarizeEpisodeJob($episode->refresh()),
-//                new CreateEmbeddingsForEpisodeJob($episode->refresh()),
-//            ],
-//        ])
-//            ->dispatch();
 
         return $episode;
     }

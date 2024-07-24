@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\HasEmbeddings;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use OpenAI;
 use OpenAI\Client;
 
@@ -47,7 +48,7 @@ class OpenAiService
     {
         $response = $this->client->embeddings()->create([
             'model' => 'text-embedding-ada-002',
-            'input' => $text,
+            'input' => Str::substr($text, 0, 30_000),
         ]);
 
         return $response->embeddings[0]->embedding;

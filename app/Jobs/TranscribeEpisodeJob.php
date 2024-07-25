@@ -32,21 +32,20 @@ class TranscribeEpisodeJob implements ShouldQueue
         }
 
         $updateContent = function (Episode $episode) {
-            $keys = collect(Redis::hkeys($episode->podcast->id . ':' . $episode->id . ':chunks'))
+            $redisKey = $episode->podcast->id . ':' . $episode->id . ':chunks';
+
+            $keys = collect(Redis::hkeys($redisKey))
                 ->sort();
 
             foreach ($keys as $key) {
-                $content = Redis::hget(
-                    $episode->podcast->id . ':' . $episode->id . ':chunks',
-                    $key,
-                );
+                $content = Redis::hget($redisKey, $key);
 
                 $episode->content = $episode->content . $content;
 
                 $episode->save();
             }
 
-            Redis::del($episode->podcast->id . ':' . $episode->id . ':chunks');
+            Redis::del($redisKey);
 
             Redis::rpush('transcribed-episodes', $episode->id);
         };

@@ -7,7 +7,6 @@ use App\Services\FileService;
 use Illuminate\Bus\Batchable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Str;
 
 class ChunkEpisodeJob implements ShouldQueue
 {

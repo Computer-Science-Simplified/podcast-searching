@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\AnswerQuestionJob;
 use App\Models\Episode;
 use App\Models\Podcast;
 use App\Services\OpenAiService;
 use App\Services\SimilarityService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class EpisodeController extends Controller
 {
@@ -21,11 +23,11 @@ class EpisodeController extends Controller
         ");
     }
 
-    public function question(Request $request, Podcast $podcast, Episode $episode, OpenAiService $openAi)
+    public function question(Request $request, Episode $episode, OpenAiService $openAi)
     {
-         return [
-             'data' => $openAi->answer($request->question, $episode->content),
-         ];
+        return response([
+            'data' => $openAi->answer($request->question, $episode),
+        ], Response::HTTP_ACCEPTED);
     }
 
     public function recommendations(Episode $episode, SimilarityService $similarityService)

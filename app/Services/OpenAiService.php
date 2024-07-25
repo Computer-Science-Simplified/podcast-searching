@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\HasEmbeddings;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use OpenAI;
 use OpenAI\Client;
@@ -56,15 +54,20 @@ class OpenAiService
 
     public function answer(string $question, string $context): ?string
     {
-        $response = $this->client->completions()->create([
-            'prompt' => "Answer the question based on the podcast episode below. \n\n Podcast episode: $context \n\n---\n\n Question: $question\nAnswer:",
-            'model' => 'gpt-3.5-turbo-instruct',
+        $response = $this->client->chat()->create([
+            'model' => 'gpt-4-turbo',
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => "Based on the context above answer the question. Context: $context. Question: $question",
+                ],
+            ],
         ]);
 
         if (empty($response->choices)) {
             return null;
         }
 
-        return $response->choices[0]->text;
+        return $response->choices[0]->message->content;
     }
 }
